@@ -1,5 +1,4 @@
 import socket
-import time
 
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -16,14 +15,10 @@ while True:
     data = client_socket.recv(1024).decode()
     if not data:
         break
-    
-    time.sleep(5)
     print(f"Отримано: {data}")
-    current_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-    print(f"Час отримання: {current_time}")
-    
-    success_message = "Дані успішно отримано і оброблено."
-    client_socket.send(success_message.encode())
+
+    if data == "exit":
+        break
 
 client_socket.close()
 server_socket.close()
