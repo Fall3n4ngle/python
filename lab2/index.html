@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Index html</h1>
+
+    <form  action="/cgi-bin/form_handler.py" method="post">
+      <label for="q1">Назвіть будь-яке місто в Японії</label><br />
+      <input type="text" id="q1" name="q1" />
+      <br />
+      <br />
+      <label for="q2">Назвіть будь-яку країну в Африці</label><br />
+      <input type="text" id="q2" name="q2" />
+      <br />
+      <br />
+      <label>Яке місто вважається "Вічним містом"?</label><br />
+      <input type="radio" name="q3" id="q3-1" value="Париж" /> Париж
+      <input type="radio" name="q3" id="q3-2" value="Рим" /> Рим
+      <input type="radio" name="q3" id="q3-3" value="Мадрид" /> Мадрид
+      <input type="radio" name="q3" id="q3-4" value="Лондон" /> Лондон
+      <br />
+      <br />
+      <label>Які з наступних міст є столицями країн?</label> <br />
+      <input type="checkbox" name="q4" id="q4-1" value="Лондон" /> Лондон
+      <input type="checkbox" name="q4" id="q4-2" value="Сідней" /> Сідней
+      <input type="checkbox" name="q4" id="q4-3" value="Токіо" /> Токіо
+      <input type="checkbox" name="q4" id="q4-4" value="Оттава" /> Оттава
+      <br /><br />
+      <input type="submit" />
+    </form>
+  </body>
+</html>
