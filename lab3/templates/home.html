@@ -1,0 +1,14 @@
+{% block head %}
+<title>Home</title>
+{% endblock %} {% extends "base.html" %} {% block content %}
+<div class="hero-section">
+  <div class="hero-section__title">
+    <h2>My name is Alex</h2>
+    <h3>I am a Software Developer</h3>
+  </div>
+  <img
+    src="{{ url_for('static', filename='images/hero-section.jpg') }}"
+    alt="Hero Image"
+  />
+</div>
+{% endblock %}
