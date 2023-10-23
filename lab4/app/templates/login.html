@@ -3,14 +3,16 @@
 {% endblock %} {% extends "base.html" %} {% block content %}
 <div class="skills-section">
   <div class="container">
-    <form method="POST" action="/login" >
-      <h2>Login</h2>
-      <label for="username">Username:</label>
-      <input type="text" name="username" id="username" /><br /><br />
-      <label for="password">Password:</label>
-      <input type="password" name="password" id="password" /><br /><br />
-      <input type="submit" value="Login" />
-    </form>
+    <div class="forms-container">
+      <form method="POST" action="/login" class="cookie-form">
+        <h2>Login</h2>
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username" /><br /><br />
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" /><br /><br />
+        <input type="submit" value="Login" class="btn" />
+      </form>
+    </div>
   </div>
 </div>
 {% endblock %}
