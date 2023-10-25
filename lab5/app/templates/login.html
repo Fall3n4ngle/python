@@ -1,0 +1,18 @@
+{% block head %}
+<title>Login</title>
+{% endblock %} {% extends "base.html" %} {% import 'macros.html' as macros %} {%
+block content %}
+<div class="skills-section">
+  <div class="container">
+    <div class="forms-container">
+      <form method="POST" novalidate class="cookie-form">
+        {{ form.csrf_token }}
+        {{ macros.render_field(form.username) }}
+        {{ macros.render_field(form.password) }}
+        {{ macros.render_field(form.remember) }}
+        <button type="submit" class="btn">Login</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
