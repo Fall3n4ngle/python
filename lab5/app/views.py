@@ -15,6 +15,10 @@ def contact():
 
 my_skills = ["HTML", "CSS", "JavaScript", "Python"]
 
+@app.route('/todo')
+def todo():
+    return render_template('todo.html')
+
 @app.route('/skills')
 @app.route('/skills/<int:id>')
 def skills(id=None):
