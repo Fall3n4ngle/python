@@ -1,0 +1,17 @@
+{% block head %}
+<title>Skills</title>
+{% endblock %}
+
+{% extends "base.html" %} {% block content %}
+<div class="skills-section">
+  <div class="container">
+    <h2>My skills</h2>
+    <p>Total skills count: {{ total_skills }}</p>
+    <ul>
+      {% for i in range(total_skills) %}
+      <li><a href="{{ url_for('skills', id=i) }}">{{ my_skills[i] }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}
