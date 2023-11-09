@@ -1,0 +1,201 @@
+from flask import render_template, request, url_for, redirect, session, make_response, flash
+import json
+import os
+from datetime import datetime
+from app import app, db
+from .forms import LoginForm, TaskForm, FeedbackForm, RegistrationForm
+from flask_bcrypt import Bcrypt
+from .models import User, Todo, Feedback
+from flask_login import login_user, current_user, logout_user, login_required
+
+bcrypt = Bcrypt(app)
+
+@app.route('/')
+def home():
+    return render_template('home.html')
+
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+my_skills = ["HTML", "CSS", "JavaScript", "Python"]
+
+@app.route('/skills')
+@app.route('/skills/<int:id>')
+def skills(id=None):
+    total_skills = len(my_skills)
+    if id is not None:
+        if 0 <= id < total_skills:
+            skill = my_skills[id]
+            return render_template('skill.html', skill=skill)
+        else:
+            return "Немає такої навички"
+    else:
+        return render_template('skills.html', my_skills=my_skills, total_skills=total_skills)
+    
+@app.context_processor
+def inject_bootstrap():
+    return dict(bootstrap_css_url=url_for('static', filename='css/bootstrap.min.css'))
+
+@app.context_processor
+def inject_system_info():
+    os_name = os.name
+    user_agent = request.headers.get('User-Agent')
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    return dict(os_name=os_name, user_agent=user_agent, current_time=current_time)
+
+def load_user_data():
+    try:
+        with open('users.json', 'r') as file:
+            user_data = json.load(file)
+        return user_data
+    except FileNotFoundError:
+        return {}
+
+user_data = load_user_data()
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if current_user.is_authenticated:
+        return redirect(url_for("home"))
+
+    form = RegistrationForm()
+
+    if form.validate_on_submit():
+        hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        new_user = User(
+            username=form.username.data,
+            email=form.email.data,
+            password=hashed_password
+        )
+        db.session.add(new_user)
+        db.session.commit()
+        flash('Account was created for {form.username.data}!', category="success")
+        return redirect(url_for("login"))
+    else:
+        for field, errors in form.errors.items():
+            for error in errors:
+                flash(f'Error in {field}: {error}', category="danger")
+
+    return render_template('register.html', form=form, title="Register")
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for("home"))
+
+    form = LoginForm()
+
+    if form.validate_on_submit():
+        user = User.query.filter_by(email=form.email.data).first()
+
+        if user and bcrypt.check_password_hash(user.password, form.password.data):
+            login_user(user, remember=form.remember.data)
+            flash('You have been logged in!', category="success")
+            session['username'] = user.username  
+            return redirect(url_for("home"))
+        else:
+            flash('Login unsuccessful. Check your email and password!', category="danger")
+
+    return render_template('login.html', form=form, title="Login")
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    flash("You have been logged out")
+    return redirect(url_for("home"))
+
+@app.route("/account")
+@login_required
+def account():
+    return render_template("account.html", title="Account")
+
+@app.route("/users", methods=['GET', 'POST'])
+def users():
+    all_users = User.query.all()
+    return render_template('users.html', all_users=all_users)
+
+@app.route('/info', methods=['GET', 'POST'])
+def info():
+    if 'username' in session:
+        username = session['username']
+        cookies = request.cookies
+
+        if request.method == 'POST':
+            key = request.form.get('key')
+            value = request.form.get('value')
+            expiration = request.form.get('expiration')
+
+            if request.form.get('change_password'):
+                new_password = request.form.get('new_password')
+                if new_password:
+                    user_data[username] = new_password
+                    with open('users.json', 'w') as file:
+                        json.dump(user_data, file)
+
+            if key and value:
+                expiration = int(expiration) if expiration else None
+
+                response = make_response(render_template('info.html', username=username, cookies=cookies))
+                response.set_cookie(key, value, max_age=expiration)
+                return response
+            elif request.form.get('delete_all'):
+                response = make_response(render_template('info.html', username=username))
+                for key in cookies:
+                    response.delete_cookie(key)
+                return response
+            elif request.form.get('delete_key'):
+                key_to_delete = request.form.get('key_to_delete')
+                if key_to_delete in cookies:
+                    response = make_response(render_template('info.html', username=username, cookies=cookies))
+                    response.delete_cookie(key_to_delete)
+                    return response
+
+        return render_template('info.html', username=username, cookies=cookies)
+
+    else:
+        return redirect('/login')
+
+@app.route('/todo', methods=['GET', 'POST'])
+def todo():
+    form = TaskForm()
+    todo_list = db.session.query(Todo).all()
+
+    if form.validate_on_submit():
+        title = form.title.data
+        new_todo = Todo(title=title, complete=False)
+        db.session.add(new_todo)
+        db.session.commit()
+        return redirect(url_for("todo"))
+
+    return render_template('todo.html', todo_list=todo_list, form=form)
+ 
+@app.route("/update/<int:todo_id>")
+def update(todo_id):
+    todo = db.session.query(Todo).filter(Todo.id == todo_id).first()
+    todo.complete = not todo.complete
+    db.session.commit()
+    return redirect(url_for("todo"))
+ 
+@app.route("/delete/<int:todo_id>")
+def delete(todo_id):
+    todo = db.session.query(Todo).filter(Todo.id == todo_id).first()
+    db.session.delete(todo)
+    db.session.commit()
+    return redirect(url_for("todo"))
+
+@app.route("/feedback", methods=['GET', 'POST'])
+def feedback():
+    form = FeedbackForm()
+    feedback_list = db.session.query(Feedback).all()
+
+    if form.validate_on_submit():
+        name = form.name.data
+        message = form.message.data
+        feedback = Feedback(name=name, message=message)
+        db.session.add(feedback)
+        db.session.commit()
+        flash("Added your feedback!")
+        return redirect(url_for("feedback"))
+    
+    return render_template('feedback.html', feedback_list=feedback_list, form=form)

@@ -1,0 +1,63 @@
+{% block head %}
+<title>Info</title>
+{% endblock %} {% extends "base.html" %} {% block content %}
+<div class="skills-section">
+  <div class="container">
+    <h1 class="title">Welcome, {{ username }}!</h1>
+    <a href="/logout" class="my-btn">Logout</a>
+    <div class="forms-container">
+      <form method="POST" action="/info" class="cookie-form">
+        <label for="key">Key:</label>
+        <input type="text" name="key" id="key" />
+        <label for="value">Value:</label>
+        <input type="text" name="value" id="value" />
+        <label for="expiration">Expiration (seconds):</label>
+        <input type="number" name="expiration" id="expiration" />
+        <input type="submit" value="Add Cookie" class="my-btn" />
+      </form>
+      <form method="POST" action="/info" class="cookie-form">
+        <input
+          type="submit"
+          name="delete_all"
+          value="Delete All Cookies"
+          class="my-btn"
+        />
+      </form>
+      <form method="POST" action="/info" class="cookie-form">
+        <label for="key_to_delete">Key to Delete:</label>
+        <input type="text" name="key_to_delete" id="key_to_delete" />
+        <input
+          type="submit"
+          name="delete_key"
+          value="Delete Cookie"
+          class="my-btn"
+        />
+      </form>
+      {% if cookies %}
+      <table border="1">
+        <tr>
+          <th>Key</th>
+          <th>Value</th>
+        </tr>
+        {% for key, value in cookies.items() %}
+        <tr>
+          <td>{{ key }}</td>
+          <td>{{ value }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+      {% endif %}
+      <form method="POST" action="/info" class="cookie-form">
+        <label for="new_password">New Password:</label>
+        <input type="password" name="new_password" id="new_password" />
+        <input
+          type="submit"
+          name="change_password"
+          value="Change Password"
+          class="my-btn"
+        />
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
