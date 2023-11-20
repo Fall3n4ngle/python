@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, ValidationError
-from wtforms.validators import DataRequired, Length, Email, Regexp
+from wtforms.validators import DataRequired, Length, Email, Regexp, EqualTo
 from app.models import User
 
 class TaskForm(FlaskForm):
@@ -18,7 +18,7 @@ class RegistrationForm(FlaskForm):
                                         ])
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
-    confirm_password = PasswordField('Password', validators=[DataRequired(), Length(min=6)])
+    confirm_password = PasswordField('Password', validators=[DataRequired(), EqualTo('password')])
 
     submit = SubmitField("Sign up")
 
