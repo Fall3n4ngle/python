@@ -1,0 +1,59 @@
+{% block head %}
+<title>Contacts</title>
+{% endblock %} {% extends "base.html" %} {% block content %}
+<div class="contact-section">
+  <div class="contact-section__content container">
+    <form action="" class="contact-section__form">
+      <h2>Send Me Message</h2>
+      <input type="text" placeholder="Your name" />
+      <input type="text" placeholder="Your email" />
+      <input type="text" placeholder="Subject" />
+      <textarea cols="30" rows="10" placeholder="Message"></textarea>
+      <button>Send</button>
+    </form>
+    <div class="contact-section__info">
+      <h2>Get in Touch</h2>
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Facilis dolorum
+        dolorem soluta quidem expedita aperiam aliquid at. Totam magni ipsum
+        suscipit amet? Autem nemo esse laboriosam ratione nobis mollitia
+        inventore?
+      </p>
+      <div class="contact-section__contacts">
+        <p>Address: 329 WASHINGTON ST BOSTON, MA 02108</p>
+        <p>Phone: (617) 557-0089</p>
+        <p>Email: contact@example.com</p>
+      </div>
+      <div class="contact-section__socials">
+        <div>
+          <img
+            src="{{ url_for('static', filename='images/socials/facebook.svg') }}"
+            alt="facebook"
+          />
+        </div>
+
+        <div>
+          <img
+            src="{{ url_for('static', filename='images/socials/instagram.svg') }}"
+            alt="instagram"
+          />
+        </div>
+
+        <div>
+          <img
+            src="{{ url_for('static', filename='images/socials/linkedin.svg') }}"
+            alt="linkedin"
+          />
+        </div>
+
+        <div>
+          <img
+            src="{{ url_for('static', filename='images/socials/twitter.svg') }}"
+            alt="twitter"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
