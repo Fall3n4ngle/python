@@ -1,0 +1,18 @@
+<header class="header">
+  <div class="container header__container">
+    <h1>DevFolio</h1>
+    <nav>
+      <ul class="header__navigation">
+        <li><a href="{{ url_for('todo.todoRoute')}}">Todo</a></li>
+        <li><a href="{{ url_for('feedback.feedbackRoute')}}">Feedback</a></li>
+        <li><a href="{{ url_for('portfolio.portfolioRoute')}}">Home</a></li>
+        <li><a href="{{ url_for('portfolio.skills')}}">Skills</a></li>
+        <li><a href="{{ url_for('portfolio.contact')}}">Contact</a></li>
+        <li><a href="{{ url_for('auth.login')}}">Login</a></li>
+        <li><a href="{{ url_for('auth.register')}}">Register</a></li>
+        <li><a href="{{ url_for('auth.account')}}">Account</a></li>
+        <li><a href="{{ url_for('session.info')}}">Info</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>

@@ -6,6 +6,7 @@ from app.utils import save_uploaded_image
 from flask_login import current_user
 from app.category.models import Category
 
+
 postBp = Blueprint('post', __name__, template_folder="templates/post")
 
 @postBp.route('/', methods=['GET'])
